@@ -12,7 +12,7 @@ def grass(filteredDemArray):
     # Software
     if sys.platform.startswith('win'):
         # MS Windows
-        grass7bin = r'C:\OSGeo4W64\bin\grass78.bat'
+        grass7bin = r"C:\Program Files\GRASS GIS 7.8\grass78.bat"
         # uncomment when using standalone WinGRASS installer
         # grass7bin = r'C:\Program Files (x86)\GRASS GIS 7.2.0\grass72.bat'
         # this can be avoided if GRASS executable is added to PATH
@@ -44,7 +44,8 @@ def grass(filteredDemArray):
             gisbase = out.decode("utf-8").strip().split('\r\n')[1]
         else:
             gisbase = out.decode("utf-8").strip('\r\n')
-        os.environ['GRASS_SH'] = os.path.join(gisbase, 'mysys', 'bin', 'sh.exe')
+        # os.environ['GRASS_SH'] = os.path.join(gisbase, 'mysys', 'bin', 'sh.exe')
+        os.environ['GRASS_SH'] = os.path.join(gisbase, 'bin', 'sh.exe')
     else:
         gisbase = out.decode("utf-8").strip('\n\r')
 
@@ -53,10 +54,13 @@ def grass(filteredDemArray):
     os.environ['PATH'] += os.pathsep + os.path.join(gisbase, 'extrabin')
     # add path to GRASS addons
     home = os.path.expanduser("~")
-    os.environ['PATH'] += os.pathsep + os.path.join(home, '.grass7', 'addons', 'scripts')
+    # os.environ['PATH'] += os.pathsep + os.path.join(home, '.grass7', 'addons', 'scripts')
+    os.environ['PATH'] += os.pathsep + os.path.join(home, 'AppData', 'Roaming', 'GRASS7', 'addons', 'bin')
+    os.environ['PATH'] += os.pathsep + os.path.join(gisbase, 'scripts')
 
     # Define GRASS-Python environment
     gpydir = os.path.join(gisbase, "etc", "python")
+    # gpydir = os.path.join(gisbase, "Python37", "python")
     sys.path.append(gpydir)
 
     # Set GISDBASE environment variable
@@ -122,16 +126,16 @@ def grass(filteredDemArray):
                   location = location, dbase = gisdb)
     # gsetup initialization 
     gsetup.init(gisbase, gisdb, location, mapset)
-
+    
     # Manage extensions
-    extensions = ['r.stream.basins', 'r.stream.watersheds']
-    extensions_installed = g.read_command('g.extension', 'a').splitlines()
-    for extension in extensions:
-        if extension in extensions_installed:
-            g.run_command('g.extension', extension=extension, operation="remove")
-            g.run_command('g.extension', extension=extension)
-        else:
-            g.run_command('g.extension', extension=extension)
+    # extensions = ['r.stream.basins', 'r.stream.watersheds']
+    # extensions_installed = g.read_command('g.extension', 'a').splitlines()
+    # for extension in extensions:
+    #     if extension in extensions_installed:
+    #         g.run_command('g.extension', extension=extension, operation="remove")
+    #         g.run_command('g.extension', extension=extension)
+    #     else:
+    #         g.run_command('g.extension', extension=extension)
             
     # Read the filtered DEM
     print('Import filtered DEM into GRASSGIS and '\

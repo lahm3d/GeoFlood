@@ -131,7 +131,7 @@ def write_geotif_filteredDEM(filteredDemArray, filepath, filename):
     outband = outDs.GetRasterBand(1)
     outband.WriteArray(filteredDemArray)
     outRasterSRS = osr.SpatialReference(wkt=Parameters.inputwktInfo)
-    authoritycode = outRasterSRS.GetAuthorityCode("PROJCS")
+    authoritycode = 5070 #outRasterSRS.GetAuthorityCode("PROJCS")
     outRasterSRS.ImportFromEPSG(int(authoritycode))
     outDs.SetProjection(outRasterSRS.ExportToWkt())
     outband.FlushCache()
